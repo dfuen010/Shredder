@@ -19,7 +19,7 @@ import {
   View,
 } from 'react-native';
 
-import SignInScreen from './Shared/Screen/SignInScreen';
+import SignInScreen from './src/components/Screen/SignInScreen';
 
 import {
   Colors,
