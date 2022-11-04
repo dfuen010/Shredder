@@ -19,7 +19,8 @@ import {
   View,
 } from 'react-native';
 
-import SignInScreen from './Shared/Screen/SignInScreen';
+//import SignInScreen from './Shared/Screen/SignInScreen';
+import CreateAccount from './Shared/Screen/CreateAccount';
 
 import {
   Colors,
@@ -28,8 +29,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
-
+import SignInScreen from "./Shared/Screen/SignInScreen";
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -70,7 +70,8 @@ const App = () => {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <SignInScreen/>
+      <SignInScreen />
+      {/*<CreateAccount />*/}
     </SafeAreaView>
   );
 };
