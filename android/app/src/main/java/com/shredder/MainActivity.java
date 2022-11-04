@@ -1,3 +1,4 @@
+import expo.modules.ReactActivityDelegateWrapper;
 package com.shredder;
 
 import com.facebook.react.ReactActivity;
@@ -12,7 +13,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "Shredder";
+    return "main";
   }
 
   /**
@@ -22,7 +23,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
-    return new MainActivityDelegate(this, getMainComponentName());
+    return new ReactActivityDelegateWrapper(this, BuildConfig.IS_NEW_ARCHITECTURE_ENABLED, new MainActivityDelegate(this, getMainComponentName()));
   }
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
