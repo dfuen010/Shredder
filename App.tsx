@@ -18,9 +18,8 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
-//import SignInScreen from './Shared/Screen/SignInScreen';
-import CreateAccount from './Shared/Screen/CreateAccount';
+import CreateAccount from './src/components/Screen/CreateAccount';
+import SignInScreen from './src/components/Screen/SignInScreen';
 
 import {
   Colors,
@@ -29,7 +28,6 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import SignInScreen from "./Shared/Screen/SignInScreen";
 
 const Section: React.FC<
   PropsWithChildren<{

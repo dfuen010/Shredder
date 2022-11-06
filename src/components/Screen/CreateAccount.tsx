@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, Image, ViewStyle, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
-import CustomInput from '../Components/CustomInput';
-import CustomButton from '../Components/CustomButton';
+import CustomInput from '../../shared/CustomInput';
+import CustomButton from '../../shared/CustomButton';
 
 const CreateAccount = () => {
   const [name, setName] = useState('');
