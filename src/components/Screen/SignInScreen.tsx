@@ -1,6 +1,6 @@
 import React, {  useState } from "react";
 import { View, Text, Image, ViewStyle } from "react-native";
-import CustomInput from "../Components/CustomInput";
+import CustomInput from "../../shared/CustomInput";
 
 const SignInScreen = () => { 
     const [email,setEmail] = useState('')
