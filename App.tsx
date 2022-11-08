@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import CreateAccount from './src/components/Screen/CreateAccount';
 import SignInScreen from './src/components/Screen/SignInScreen';
-//import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
 import {
   Colors,
@@ -68,12 +68,12 @@ const App = () => {
   };
 
   return (
-    //<NavigationContainer>
+    <NavigationContainer>
       <SafeAreaView style={backgroundStyle}>
         <SignInScreen />
         {/*<CreateAccount />*/}
       </SafeAreaView>
-    //</NavigationContainer>
+    </NavigationContainer>
   );
 };
 
