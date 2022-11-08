@@ -9,8 +9,9 @@ const SignInScreen = () => {
   const [password, setPassword] = useState('');
 
   return (
+    <>
     <View>
-      <DisplayAnImage/>
+      <DisplayAnImage />
       <CustomInput
         value={email}
         setValue={setEmail}
@@ -19,8 +20,7 @@ const SignInScreen = () => {
         width={200}
         radius={5}
         margin={10}
-        keyboardType={'default'}
-      />
+        keyboardType={'default'} />
 
       <CustomInput
         value={password}
@@ -30,21 +30,33 @@ const SignInScreen = () => {
         width={200}
         radius={5}
         margin={10}
-        keyboardType={'default'}
-      />
-      <CustomButton
-            title={'Login'}
-            onClick={() => console.log('yeas')}
-            color={'#CB3F3F'}
-            radius={20}
-            height={47}
-            width={133}
-            textSize={15}
-            font={'Roboto'}
-            fontColor={'#ffffff'}
-            margin={40}
-          />
+        keyboardType={'default'} />
     </View>
+    <View style={{ flexDirection:"row" }}>
+        <CustomButton
+          title={'Login'}
+          onClick={() => console.log('yeas')}
+          color={'#CB3F3F'}
+          radius={20}
+          height={47}
+          width={133}
+          textSize={15}
+          font={'Roboto'}
+          fontColor={'#ffffff'}
+          margin={40} />
+        <CustomButton
+          title={'Create Account'}
+          onClick={() => console.log('im working')}
+          color={'#CB3F3F'}
+          radius={20}
+          height={47}
+          width={133}
+          textSize={15}
+          font={'Roboto'}
+          fontColor={'#ffffff'}
+          margin={40} />
+    </View>
+    </>
   );
 };
 
