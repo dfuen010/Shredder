@@ -1,7 +1,7 @@
+package com.shredder;
 import android.content.res.Configuration;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
-package com.shredder;
 
 import android.app.Application;
 import android.content.Context;

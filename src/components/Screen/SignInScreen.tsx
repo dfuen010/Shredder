@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, Image, ViewStyle} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
+import CustomButton from '../../shared/CustomButton';
+import DisplayAnImage from '../../shared/DisplayAnImage';
 
 const SignInScreen = () => {
   const [email, setEmail] = useState('');
@@ -8,8 +10,7 @@ const SignInScreen = () => {
 
   return (
     <View>
-      <Text>Shredder</Text>
-
+      <DisplayAnImage/>
       <CustomInput
         value={email}
         setValue={setEmail}
@@ -31,6 +32,18 @@ const SignInScreen = () => {
         margin={10}
         keyboardType={'default'}
       />
+      <CustomButton
+            title={'Login'}
+            onClick={() => console.log('yeas')}
+            color={'#CB3F3F'}
+            radius={20}
+            height={47}
+            width={133}
+            textSize={15}
+            font={'Roboto'}
+            fontColor={'#ffffff'}
+            margin={40}
+          />
     </View>
   );
 };

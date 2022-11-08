@@ -1,5 +1,5 @@
-import expo.modules.ReactActivityDelegateWrapper;
 package com.shredder;
+import expo.modules.ReactActivityDelegateWrapper;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
