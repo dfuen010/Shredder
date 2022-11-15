@@ -3,8 +3,14 @@ import {View, Text, Image, ViewStyle} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
+import { StackParamList } from '../../shared/Screens';
+import { NavigationProp } from '@react-navigation/native'
 
-const SignInScreen = () => {
+type Props = {
+  navigation: NavigationProp<StackParamList, 'CreateAccount'>;
+}
+
+const SignInScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -46,7 +52,7 @@ const SignInScreen = () => {
           margin={40} />
         <CustomButton
           title={'Create Account'}
-          onClick={() => console.log('im working')}
+          onClick={() => navigation.navigate('CreateAccount')}
           color={'#CB3F3F'}
           radius={20}
           height={47}

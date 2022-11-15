@@ -19,7 +19,7 @@ const CreateAccount = () => {
         <View style={styles.textInputBox}>
           <Image
             style={styles.logo}
-            source={require('../Images/My_project.png')}
+            source={require('../../../Shared/Images/My_project.png')}
           />
           <CustomInput
             value={name}
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     width: 150,
     alignSelf: 'center',
     marginBottom: 40,
+    marginTop: 40
   },
 });
 

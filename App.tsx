@@ -29,6 +29,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -60,6 +61,8 @@ const Section: React.FC<
   );
 };
 
+const Stack = createNativeStackNavigator();
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -68,12 +71,20 @@ const App = () => {
   };
 
   return (
-    <NavigationContainer>
-      <SafeAreaView style={backgroundStyle}>
-        <SignInScreen />
-        {/*<CreateAccount />*/}
-      </SafeAreaView>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={SignInScreen}
+            options={{ title: 'Login' }}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{ title: 'Create Account' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 };
 

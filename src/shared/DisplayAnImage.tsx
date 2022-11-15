@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 100,
+        paddingTop: 60,
         paddingBottom: 50,
     },
     tinyLogo: {
