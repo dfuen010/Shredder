@@ -3,6 +3,7 @@ import {View, Text, Image, ViewStyle, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
+import DisplayAnImage from '../../shared/DisplayAnImage';
 
 const CreateAccount = () => {
   const [name, setName] = useState('');
@@ -17,10 +18,11 @@ const CreateAccount = () => {
         style={styles.background}
         locations={[0, 0.8]}>
         <View style={styles.textInputBox}>
-          <Image
-            style={styles.logo}
-            source={require('../Images/My_project.png')}
-          />
+          <DisplayAnImage />
+          {/*<Image*/}
+          {/*  style={styles.logo}*/}
+          {/*  source={require('../Images/My_project.png')}*/}
+          {/*/>*/}
           <CustomInput
             value={name}
             setValue={setName}
