@@ -12,6 +12,7 @@ interface Props {
   font: string;
   fontColor: string;
   margin: number;
+  disabled?: boolean;
 }
 
 const CustomButton: React.FC<Props> = props => (
