@@ -1,12 +1,43 @@
 import React, {useState} from 'react';
-import {View, Text, Image, ViewStyle} from 'react-native';
+import {View, Text, Image, ViewStyle, Alert} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
+import { User, useRealm, useQuery } from '../Realm/User';
 
 const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const realm = useRealm();
+  const result = useQuery('User');
+
+  const handleUserLogin = React.useCallback(
+    (email: string, password: string) => {
+      if (email == '' || password == '') {
+        console.log('working realm data')
+        return;
+      }
+
+      try {
+        realm.write(() => {
+          //check for user
+          const q = `email == '${email}'`;
+          let userResults = realm.objects('User').filtered(q);
+
+          if (!userResults.length) {
+            let userResults = [
+              realm.create('User', new User('Heyo', email, password)),
+            ];
+          }
+
+          console.log(email)
+          Alert.alert("success adding user")
+        })
+      }
+      catch (e: any) {
+        Alert.alert("error adding user", e.message)
+      }
+    }, [realm])
 
   return (
     <View>
@@ -34,7 +65,7 @@ const SignInScreen = () => {
       />
       <CustomButton
             title={'Login'}
-            onClick={() => console.log('yeas')}
+            onClick={() => handleUserLogin}
             color={'#CB3F3F'}
             radius={20}
             height={47}

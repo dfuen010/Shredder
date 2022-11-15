@@ -10,12 +10,13 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@realm/react": "^0.4.1",
     "expo": ">=47.0.0-0 <48.0.0",
     "expo-constants": "~14.0.2",
+    "expo-linear-gradient": "~12.0.1",
     "react": "18.1.0",
     "react-native": "0.70.4",
-    "react-native-linear-gradient": "^2.6.2",
-    "expo-linear-gradient": "~12.0.1"
+    "react-native-linear-gradient": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
