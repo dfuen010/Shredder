@@ -3,20 +3,25 @@ import {View, Text, Image, ViewStyle, StyleSheet} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
-import {LinearGradient} from "expo-linear-gradient";
+import { StackParamList } from '../../shared/Screens';
+import { NavigationProp } from '@react-navigation/native';
+import {LinearGradient} from 'expo-linear-gradient';
 
-// @ts-ignore
-const SignInScreen = ({navigation}) => {
+type Props = {
+  navigation: NavigationProp<StackParamList, 'CreateAccount'>;
+}
+
+const SignInScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   return (
+    <>
+    <LinearGradient
+        colors={['#FF0000', '#000000']}
+        style={styles.background}
+        locations={[0, 0.8]}>
     <View style={styles.container}>
-        <LinearGradient
-            colors={['#FF0000', '#000000']}
-            style={styles.background}
-            locations={[0, 0.8]}>
-
       <DisplayAnImage />
       <CustomInput
         value={email}
@@ -26,8 +31,7 @@ const SignInScreen = ({navigation}) => {
         width={200}
         radius={5}
         margin={10}
-        keyboardType={'default'}
-      />
+        keyboardType={'default'} />
 
       <CustomInput
         value={password}
@@ -37,22 +41,34 @@ const SignInScreen = ({navigation}) => {
         width={200}
         radius={5}
         margin={10}
-        keyboardType={'default'}
-      />
-      <CustomButton
-        title={'Login'}
-        onClick={() => navigation.navigate('CreateAccount')}
-        color={'#CB3F3F'}
-        radius={20}
-        height={47}
-        width={133}
-        textSize={15}
-        font={'Roboto'}
-        fontColor={'#ffffff'}
-        margin={40}
-      />
-        </LinearGradient>
+        keyboardType={'default'} />
     </View>
+    <View style={{ flexDirection:"row" }}>
+        <CustomButton
+          title={'Login'}
+          onClick={() => console.log('yeas')}
+          color={'#CB3F3F'}
+          radius={20}
+          height={47}
+          width={133}
+          textSize={15}
+          font={'Roboto'}
+          fontColor={'#ffffff'}
+          margin={40} />
+        <CustomButton
+          title={'Create Account'}
+          onClick={() => navigation.navigate('CreateAccount')}
+          color={'#CB3F3F'}
+          radius={20}
+          height={47}
+          width={133}
+          textSize={15}
+          font={'Roboto'}
+          fontColor={'#ffffff'}
+          margin={40} />
+    </View>
+    </LinearGradient>
+    </>
   );
 };
 

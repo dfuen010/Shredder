@@ -71,17 +71,20 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   return (
-    <NavigationContainer>
-      {/*<SafeAreaView style={backgroundStyle}>*/}
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-        <Stack.Screen name="CreateAccount" component={CreateAccount} />
-      </Stack.Navigator>
-      {/*</SafeAreaView>*/}
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={SignInScreen}
+            options={{ title: 'Login' }}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{ title: 'Create Account' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 };
 
