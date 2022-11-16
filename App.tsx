@@ -20,6 +20,8 @@ import {
 } from 'react-native';
 import CreateAccount from './src/components/Screen/CreateAccount';
 import SignInScreen from './src/components/Screen/SignInScreen';
+import Weight from './src/components/Screen/Weight';
+import Height from './src/components/Screen/Height';
 
 import {
   Colors,
@@ -31,6 +33,7 @@ import {
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import weight from './src/components/Screen/Weight';
 
 // const Section: React.FC<
 //   PropsWithChildren<{
@@ -71,20 +74,33 @@ const App = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
   return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Login"
-            component={SignInScreen}
-            options={{ title: 'Login' }}
-          />
-          <Stack.Screen
-            name="CreateAccount"
-            component={CreateAccount}
-            options={{ title: 'Create Account' }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen
+          name="Login"
+          component={SignInScreen}
+          options={{title: 'Login'}}
+        />
+        <Stack.Screen
+          name="CreateAccount"
+          component={CreateAccount}
+          options={{title: 'Create Account'}}
+        />
+        <Stack.Screen
+          name="AddHeight"
+          component={Height}
+          options={{title: 'Update Height'}}
+        />
+        <Stack.Screen
+          name="AddWeight"
+          component={Weight}
+          options={{title: 'Update Weight'}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

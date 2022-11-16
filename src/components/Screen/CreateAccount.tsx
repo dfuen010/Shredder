@@ -18,20 +18,21 @@ const CreateAccount = () => {
         style={styles.background}
         locations={[0, 0.8]}>
         <View style={styles.textInputBox}>
-          <DisplayAnImage />
-          {/*<Image*/}
-          {/*  style={styles.logo}*/}
-          {/*  source={require('../Images/My_project.png')}*/}
-          {/*/>*/}
+          <Image
+            style={styles.logo}
+            source={require('../../../Shared/Images/My_project.png')}
+          />
           <CustomInput
             value={name}
             setValue={setName}
             placeholder={'Name'}
             height={31}
-            width={75}
+            width={251}
             radius={0}
             margin={25}
             keyboardType={'default'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -43,6 +44,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -54,6 +57,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -65,6 +70,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
           <CustomButton
             title={'Create Account'}
@@ -77,6 +84,7 @@ const CreateAccount = () => {
             font={'Roboto'}
             fontColor={'#ffffff'}
             margin={40}
+            paddingTop={12}
           />
         </View>
       </LinearGradient>
@@ -111,7 +119,7 @@ const styles = StyleSheet.create({
     width: 150,
     alignSelf: 'center',
     marginBottom: 40,
-    marginTop: 40
+    marginTop: 40,
   },
 });
 

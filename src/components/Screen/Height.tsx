@@ -10,18 +10,32 @@ import {
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 
-const Weight = () => {
-  const [weight, setWeight] = useState('');
+const Height = () => {
+  const [ft, setFt] = useState('');
+  const [inch, setIn] = useState('');
   const [date, setDate] = useState('');
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.header}>Add Weight</Text>
-      <Text style={styles.text}> Weight(lbs):</Text>
+      <Text style={styles.header}>Add Height</Text>
+      <Text style={styles.text}> Height(ft):</Text>
       <CustomInput
-        value={weight}
-        setValue={setWeight}
-        placeholder={'150'} //should be what current weight is
+        value={ft}
+        setValue={setFt}
+        placeholder={'5'} //should be what current weight is
+        height={41}
+        width={82}
+        radius={15}
+        margin={10}
+        keyboardType={'numeric'}
+        color={'#8F8F8F'}
+        align={'flex-end'}
+      />
+      <Text style={styles.text}> Height(in):</Text>
+      <CustomInput
+        value={inch}
+        setValue={setIn}
+        placeholder={'10'} //should be what current weight is
         height={41}
         width={82}
         radius={15}
@@ -105,4 +119,4 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
-export default Weight;
+export default Height;
