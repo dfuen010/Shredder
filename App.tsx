@@ -18,6 +18,9 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import CreateAccount from './src/components/Screen/CreateAccount';
+import SignInScreen from './src/components/Screen/SignInScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
 import {
   Colors,
@@ -26,9 +29,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
-import Exercise from './src/components/Exercise/Exercises';
-import Meals from './src/components/Meal/Meals';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -60,6 +61,8 @@ const Section: React.FC<
   );
 };
 
+const Stack = createNativeStackNavigator();
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -68,7 +71,20 @@ const App = () => {
   };
 
   return (
-    <Meals />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={SignInScreen}
+            options={{ title: 'Login' }}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{ title: 'Create Account' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 };
 
