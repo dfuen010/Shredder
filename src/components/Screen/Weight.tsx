@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,34 @@ import {
 } from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
+import * as SQLite from 'expo-sqlite';
 
-const Weight = () => {
+const db = SQLite.openDatabase('UsersDB');
+
+const Weight = ({route, navigation}) => {
   const [weight, setWeight] = useState('');
   const [date, setDate] = useState('');
+  const [displayWeight, setDWeight] = useState('');
+
+  const readData = async () => {
+    try {
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'SELECT * FROM Users WHERE ID=' + route.params.id,
+          null,
+          (_, {rows}) => setDWeight(JSON.stringify(rows._array[0].Weight)),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+
+  useEffect(() => {
+    readData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -21,7 +45,7 @@ const Weight = () => {
       <CustomInput
         value={weight}
         setValue={setWeight}
-        placeholder={'150'} //should be what current weight is
+        placeholder={displayWeight} //should be what current weight is
         height={41}
         width={82}
         radius={15}

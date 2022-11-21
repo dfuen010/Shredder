@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,34 @@ import {
 } from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
+import * as SQLite from 'expo-sqlite';
 
-const Height = () => {
+const db = SQLite.openDatabase('UsersDB');
+
+const Height = ({route, navigation}) => {
   const [ft, setFt] = useState('');
   const [inch, setIn] = useState('');
   const [date, setDate] = useState('');
+  const [displayHeight, setDHeight] = useState('');
+
+  const readData = async () => {
+    try {
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'SELECT * FROM Users WHERE ID=' + route.params.id,
+          null,
+          (_, {rows}) => setDHeight(JSON.stringify(rows._array[0].Height)),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+
+  useEffect(() => {
+    readData();
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -22,7 +45,7 @@ const Height = () => {
       <CustomInput
         value={ft}
         setValue={setFt}
-        placeholder={'5'} //should be what current weight is
+        placeholder={displayHeight} //should be what current weight is
         height={41}
         width={82}
         radius={15}
