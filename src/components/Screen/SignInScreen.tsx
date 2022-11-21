@@ -1,27 +1,84 @@
-import React, {useState} from 'react';
-import {View, Text, Image, ViewStyle, StyleSheet, StatusBar} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ViewStyle,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
 import {StackParamList} from '../../shared/Screens';
 import {NavigationProp} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase('UsersDB');
 
-type Props = {
-  navigation: NavigationProp<StackParamList, 'CreateAccount'>;
-};
-
-const SignInScreen: React.FC<Props> = ({navigation}) => {
+//code needs a lot of clean up here
+const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [dbData, setData] = useState({});
+  const [canLogin, setCanLogin] = useState(false);
+  const [canCreateAccount, setCanCreateAccount] = useState(false);
+  const [id, setId] = useState('');
 
+  useEffect(() => {}, []);
+
+  const readData = async func => {
+    try {
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'SELECT * FROM Users WHERE Email=' + email,
+          null,
+          (_, {rows}) => func(rows),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+  const handleLogin = () => {
+    readData(logVal);
+    if (canLogin) {
+      navigation.navigate('AddWeight', {id: id});
+    } else {
+      console.log('User does not exist');
+    }
+  };
+
+  const logVal = (data: SQLite.SQLResultSetRowList) => {
+    if (data._array[0].Password === password) {
+      setCanLogin(true);
+      setId(data._array[0].ID);
+    }
+  };
+  const checkNewUser = (data: SQLite.SQLResultSetRowList) => {
+    if (data.length === 0) {
+      setCanCreateAccount(true);
+    }
+  };
+  const handleCreateAccount = () => {
+    readData(checkNewUser);
+    if (canCreateAccount) {
+      navigation.navigate('CreateAccount', {
+        userEmail: email,
+        userPass: password,
+      });
+    } else {
+      console.log('User Already Exist');
+    }
+  };
   return (
     <LinearGradient
       colors={['#FF0000', '#000000']}
       style={styles.background}
       locations={[0, 0.8]}>
       <View>
-        <StatusBar barStyle="dark-content" backgroundColor={'#FF0000'}/>
+        <StatusBar barStyle="dark-content" backgroundColor={'#FF0000'} />
         <DisplayAnImage />
         <CustomInput
           value={email}
@@ -52,7 +109,7 @@ const SignInScreen: React.FC<Props> = ({navigation}) => {
       <View style={{flexDirection: 'row'}}>
         <CustomButton
           title={'Login'}
-          onClick={() => console.log('yeas')}
+          onClick={() => handleLogin()} //navigation.navigate('AddWeight')}
           color={'#CB3F3F'}
           radius={20}
           height={47}
@@ -65,7 +122,7 @@ const SignInScreen: React.FC<Props> = ({navigation}) => {
         />
         <CustomButton
           title={'Create Account'}
-          onClick={() => navigation.navigate('CreateAccount')}
+          onClick={() => handleCreateAccount()}
           color={'#CB3F3F'}
           radius={20}
           height={47}
