@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet, FlexAlignType} from 'react-native';
 
 interface Props {
   value: string;
@@ -10,6 +10,8 @@ interface Props {
   radius: number;
   margin: number;
   keyboardType: string;
+  color: string;
+  align: 'auto' | FlexAlignType | undefined;
 }
 
 const CustomInput = (props: Props) => {
@@ -28,9 +30,10 @@ const CustomInput = (props: Props) => {
 const styles = (props: Props) =>
   StyleSheet.create({
     container: {
-      backgroundColor: 'white',
-      width: '75%',
-      alignSelf: 'center',
+      backgroundColor: props.color,
+      width: props.width,
+      height: props.height,
+      alignSelf: props.align,
 
       borderColor: 'e8e8e8',
       borderWidth: 1,
@@ -41,10 +44,12 @@ const styles = (props: Props) =>
     },
 
     input: {
-      height: props.height,
-      width: props.width,
+      position: 'absolute',
+      alignSelf: 'center',
+      justifyContent: 'center',
       padding: 0,
       keyboardType: props.keyboardType,
+      color: 'red',
     },
   });
 

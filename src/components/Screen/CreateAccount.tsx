@@ -3,6 +3,7 @@ import {View, Text, Image, ViewStyle, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
+import DisplayAnImage from '../../shared/DisplayAnImage';
 
 const CreateAccount = () => {
   const [name, setName] = useState('');
@@ -26,10 +27,12 @@ const CreateAccount = () => {
             setValue={setName}
             placeholder={'Name'}
             height={31}
-            width={75}
+            width={251}
             radius={0}
             margin={25}
             keyboardType={'default'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -41,6 +44,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -52,6 +57,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -63,6 +70,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
           <CustomButton
             title={'Create Account'}
@@ -75,6 +84,7 @@ const CreateAccount = () => {
             font={'Roboto'}
             fontColor={'#ffffff'}
             margin={40}
+            paddingTop={12}
           />
         </View>
       </LinearGradient>
@@ -109,7 +119,7 @@ const styles = StyleSheet.create({
     width: 150,
     alignSelf: 'center',
     marginBottom: 40,
-    marginTop: 40
+    marginTop: 40,
   },
 });
 
