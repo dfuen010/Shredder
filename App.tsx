@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import CreateAccount from './src/components/Screen/CreateAccount';
 import SignInScreen from './src/components/Screen/SignInScreen';
+import Homepage from './src/components/Screen/homepage';
 import { NavigationContainer } from '@react-navigation/native';
 
 import {
@@ -83,7 +84,13 @@ const App = () => {
             component={CreateAccount}
             options={{ title: 'Create Account' }}
           />
+          <Stack.Screen
+            name="Homepage"
+            component={Homepage}
+            options={{ title: 'Go to Homepage' }}
+          />
         </Stack.Navigator>
+
       </NavigationContainer>
   );
 };
