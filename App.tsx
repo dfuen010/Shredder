@@ -20,6 +20,8 @@ import {
 } from 'react-native';
 import CreateAccount from './src/components/Screen/CreateAccount';
 import SignInScreen from './src/components/Screen/SignInScreen';
+import Homepage from './src/components/Screen/homepage';
+import { NavigationContainer } from '@react-navigation/native';
 import Weight from './src/components/Screen/Weight';
 import Height from './src/components/Screen/Height';
 
@@ -89,6 +91,11 @@ const App = () => {
           component={CreateAccount}
           options={{title: 'Create Account'}}
         />
+        <Stack.Screen
+            name="Homepage"
+            component={Homepage}
+            options={{ title: 'Go to Homepage' }}
+          />
         <Stack.Screen
           name="AddHeight"
           component={Height}

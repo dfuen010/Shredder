@@ -7,11 +7,11 @@ import {StackParamList} from '../../shared/Screens';
 import {NavigationProp} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 
-type Props = {
-  navigation: NavigationProp<StackParamList, 'CreateAccount'>;
-};
+// type Props = {
+//   navigation: NavigationProp<StackParamList, 'CreateAccount'>;
+// }
 
-const SignInScreen: React.FC<Props> = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -52,13 +52,13 @@ const SignInScreen: React.FC<Props> = ({navigation}) => {
       <View style={{flexDirection: 'row'}}>
         <CustomButton
           title={'Login'}
-          onClick={() => console.log('yeas')}
+          onClick={() => navigation.navigate('Homepage')}
           color={'#CB3F3F'}
           radius={20}
           height={47}
           width={133}
           textSize={15}
-          font={'Roboto'}
+          font={'Arial'}
           fontColor={'#ffffff'}
           margin={30}
           paddingTop={12}
@@ -71,7 +71,7 @@ const SignInScreen: React.FC<Props> = ({navigation}) => {
           height={47}
           width={133}
           textSize={15}
-          font={'Roboto'}
+          font={'Arial'}
           fontColor={'#ffffff'}
           margin={40}
           paddingTop={12}
