@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, Image, ViewStyle} from 'react-native';
+import {View, Text, Image, ViewStyle, StyleSheet, StatusBar} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
-import { StackParamList } from '../../shared/Screens';
-import { NavigationProp } from '@react-navigation/native'
+import {StackParamList} from '../../shared/Screens';
+import {NavigationProp} from '@react-navigation/native';
+import {LinearGradient} from 'expo-linear-gradient';
 
 // type Props = {
 //   navigation: NavigationProp<StackParamList, 'CreateAccount'>;
@@ -15,30 +16,40 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   return (
-    <>
-    <View>
-      <DisplayAnImage />
-      <CustomInput
-        value={email}
-        setValue={setEmail}
-        placeholder={'Email Address'}
-        height={30}
-        width={200}
-        radius={5}
-        margin={10}
-        keyboardType={'default'} />
+    <LinearGradient
+      colors={['#FF0000', '#000000']}
+      style={styles.background}
+      locations={[0, 0.8]}>
+      <View>
+        <StatusBar barStyle="dark-content" backgroundColor={'#FF0000'}/>
+        <DisplayAnImage />
+        <CustomInput
+          value={email}
+          setValue={setEmail}
+          placeholder={'Email Address'}
+          height={30}
+          width={200}
+          radius={5}
+          margin={10}
+          keyboardType={'default'}
+          color={'white'}
+          align={'center'}
+        />
 
-      <CustomInput
-        value={password}
-        setValue={setPassword}
-        placeholder={'Password'}
-        height={30}
-        width={200}
-        radius={5}
-        margin={10}
-        keyboardType={'default'} />
-    </View>
-    <View style={{ flexDirection:"row" }}>
+        <CustomInput
+          value={password}
+          setValue={setPassword}
+          placeholder={'Password'}
+          height={30}
+          width={200}
+          radius={5}
+          margin={10}
+          keyboardType={'default'}
+          color={'white'}
+          align={'center'}
+        />
+      </View>
+      <View style={{flexDirection: 'row'}}>
         <CustomButton
           title={'Login'}
           onClick={() => navigation.navigate('Homepage')}
@@ -49,7 +60,9 @@ const SignInScreen = ({ navigation }) => {
           textSize={15}
           font={'Arial'}
           fontColor={'#ffffff'}
-          margin={40} />
+          margin={30}
+          paddingTop={12}
+        />
         <CustomButton
           title={'Create Account'}
           onClick={() => navigation.navigate('CreateAccount')}
@@ -60,10 +73,42 @@ const SignInScreen = ({ navigation }) => {
           textSize={15}
           font={'Arial'}
           fontColor={'#ffffff'}
-          margin={40} />
-    </View>
-    </>
+          margin={40}
+          paddingTop={12}
+        />
+      </View>
+    </LinearGradient>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    height: '100%',
+    width: '100%',
+  },
+  textInputBox: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+  logo: {
+    height: 150,
+    width: 150,
+    alignSelf: 'center',
+    marginBottom: 40,
+  },
+});
 
 export default SignInScreen;

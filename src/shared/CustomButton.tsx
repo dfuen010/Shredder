@@ -13,6 +13,7 @@ interface Props {
   fontColor: string;
   margin: number;
   disabled?: boolean;
+  paddingTop: number;
 }
 
 const CustomButton: React.FC<Props> = props => (
@@ -30,7 +31,7 @@ const styles = (props: Props) =>
       elevation: 0,
       backgroundColor: props.color,
       borderRadius: props.radius,
-      paddingVertical: 12,
+      paddingVertical: props.paddingTop,
       paddingHorizontal: 0,
       alignItems: 'center',
       height: props.height,
