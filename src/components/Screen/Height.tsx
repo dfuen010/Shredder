@@ -37,7 +37,6 @@ const Height = ({route, navigation}) => {
   useEffect(() => {
     readData();
   }, []);
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />

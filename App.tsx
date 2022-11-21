@@ -7,6 +7,7 @@ import Exercises from './src/components/Exercise/Exercises';
 import Meals from './src/components/Meal/Meals';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Homepage from './src/components/Screen/homepage';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,11 @@ const App = () => {
           component={CreateAccount}
           options={{title: 'Create Account'}}
         />
+        <Stack.Screen
+            name="Homepage"
+            component={Homepage}
+            options={{ title: 'Go to Homepage' }}
+          />
         <Stack.Screen
           name="AddHeight"
           component={Height}

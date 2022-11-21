@@ -42,7 +42,7 @@ const SignInScreen = ({navigation}) => {
   const handleLogin = () => {
     readData(logVal);
     if (canLogin) {
-      navigation.navigate('AddWeight', {id: id});
+      navigation.navigate('Homepage', {id: id})
     } else {
       console.log('User does not exist');
     }
@@ -116,7 +116,7 @@ const SignInScreen = ({navigation}) => {
           height={47}
           width={133}
           textSize={15}
-          font={'Roboto'}
+          font={'Arial'}
           fontColor={'#ffffff'}
           margin={30}
           paddingTop={12}
@@ -129,7 +129,7 @@ const SignInScreen = ({navigation}) => {
           height={47}
           width={133}
           textSize={15}
-          font={'Roboto'}
+          font={'Arial'}
           fontColor={'#ffffff'}
           margin={40}
           paddingTop={12}
