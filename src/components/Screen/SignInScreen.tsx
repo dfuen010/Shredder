@@ -10,8 +10,6 @@ import {
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
-import {StackParamList} from '../../shared/Screens';
-import {NavigationProp} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('UsersDB');
@@ -27,7 +25,7 @@ const SignInScreen = ({navigation}) => {
 
   useEffect(() => {}, []);
 
-  const readData = async func => {
+  const readData = async (func: Function) => {
     try {
       db.transaction(tx => {
         // sending 4 arguments in executeSql
@@ -54,6 +52,8 @@ const SignInScreen = ({navigation}) => {
     if (data._array[0].Password === password) {
       setCanLogin(true);
       setId(data._array[0].ID);
+    } else {
+      console.log('Password Incorrect');
     }
   };
   const checkNewUser = (data: SQLite.SQLResultSetRowList) => {
@@ -61,16 +61,17 @@ const SignInScreen = ({navigation}) => {
       setCanCreateAccount(true);
     }
   };
+  //not properly checking for accounts yet
   const handleCreateAccount = () => {
-    readData(checkNewUser);
-    if (canCreateAccount) {
-      navigation.navigate('CreateAccount', {
-        userEmail: email,
-        userPass: password,
-      });
-    } else {
-      console.log('User Already Exist');
-    }
+    //readData(checkNewUser);
+    navigation.navigate('CreateAccount', {
+      userEmail: email,
+      userPass: password,
+    });
+    // if (canCreateAccount) {
+    // } else {
+    //   console.log('User Already Exist');
+    // }
   };
   return (
     <LinearGradient
@@ -89,7 +90,7 @@ const SignInScreen = ({navigation}) => {
           radius={5}
           margin={10}
           keyboardType={'default'}
-          color={'white'}
+          color={'black'}
           align={'center'}
         />
 
@@ -102,7 +103,7 @@ const SignInScreen = ({navigation}) => {
           radius={5}
           margin={10}
           keyboardType={'default'}
-          color={'white'}
+          color={'black'}
           align={'center'}
         />
       </View>

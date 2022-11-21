@@ -13,7 +13,7 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('UsersDB');
 
-const Height = ({route, naviation}) => {
+const Height = ({route, navigation}) => {
   const [ft, setFt] = useState('');
   const [inch, setIn] = useState('');
   const [date, setDate] = useState('');

@@ -10,8 +10,6 @@ const db = SQLite.openDatabase('UsersDB');
 //code needs a lot of clean up here
 const CreateAccount = ({route, navigation}) => {
   const {userEmail, userPass} = route.params;
-  console.log(userEmail);
-  console.log(userPass);
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
   const [heightFt, setFt] = useState('');

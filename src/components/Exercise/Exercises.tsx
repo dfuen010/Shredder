@@ -1,15 +1,15 @@
-import { useState } from "react";
-import Slider from "../../shared/Options";
-import EditExercise from "./EditExercise";
-import {View, Text, SafeAreaView, StyleSheet} from "react-native";
-import {EXCERCISES, CARDIO_DEFAULTS, STRENGTH_DEFAULTS} from "./defaults";
+import {useState} from 'react';
+import Slider from '../../shared/Options';
+import EditExercise from './EditExercise';
+import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import {EXCERCISES, CARDIO_DEFAULTS, STRENGTH_DEFAULTS} from './defaults';
 
 type ExerciseListProps = {
-  type: string,
-}
+  type: string;
+};
 
 const ExerciseList = ({type}: ExerciseListProps) => {
-  const defaults = type === "Cardio" ? CARDIO_DEFAULTS : STRENGTH_DEFAULTS;
+  const defaults = type === 'Cardio' ? CARDIO_DEFAULTS : STRENGTH_DEFAULTS;
   // make api call for created exercises here
   return (
     <>
@@ -17,10 +17,10 @@ const ExerciseList = ({type}: ExerciseListProps) => {
         return (
           <>
             <View style={styles.lineBreak} />
-            <EditExercise 
-              exerciseType={type} 
+            <EditExercise
+              exerciseType={type}
               exerciseName={exercise}
-              isCreate={i === defaults.length - 1} 
+              isCreate={i === defaults.length - 1}
             />
           </>
         );
@@ -30,18 +30,17 @@ const ExerciseList = ({type}: ExerciseListProps) => {
 };
 
 const Exercises = () => {
-
-  const [exercise, setExercise] = useState("Cardio");
+  const [exercise, setExercise] = useState('Cardio');
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <Text style={styles.topText}>Add/Edit Exercise</Text>
-        <Slider options={EXCERCISES} setOption={setExercise}></Slider>
-        <ExerciseList type={exercise}/>
-        <View style={styles.lineBreak}></View>
+        <Slider options={EXCERCISES} setOption={setExercise} />
+        <ExerciseList type={exercise} />
+        <View style={styles.lineBreak} />
       </View>
-    </SafeAreaView>   
+    </SafeAreaView>
   );
 };
 
@@ -52,15 +51,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   topText: {
-    color: "white",
+    color: 'white',
     fontSize: 32,
     textAlign: 'center',
     padding: 25,
   },
   lineBreak: {
     height: 3,
-    backgroundColor: "red",
-  }
+    backgroundColor: 'red',
+  },
 });
 
 export default Exercises;
