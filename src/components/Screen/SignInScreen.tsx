@@ -18,7 +18,6 @@ const db = SQLite.openDatabase('UsersDB');
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [dbData, setData] = useState({});
   const [canLogin, setCanLogin] = useState(false);
   const [canCreateAccount, setCanCreateAccount] = useState(false);
   const [id, setId] = useState('');
@@ -30,7 +29,7 @@ const SignInScreen = ({navigation}) => {
       db.transaction(tx => {
         // sending 4 arguments in executeSql
         tx.executeSql(
-          'SELECT * FROM Users WHERE Email=' + email,
+          "SELECT * FROM Users WHERE Email LIKE '" + email + "'",
           null,
           (_, {rows}) => func(rows),
         );
@@ -42,17 +41,21 @@ const SignInScreen = ({navigation}) => {
   const handleLogin = () => {
     readData(logVal);
     if (canLogin) {
-      navigation.navigate('Homepage', {id: id})
+      navigation.navigate('Homepage', {id: id});
     } else {
+      //should be displayed at some point
       console.log('User does not exist');
     }
   };
 
   const logVal = (data: SQLite.SQLResultSetRowList) => {
+    //testing purposes only
+    console.log(data);
     if (data._array[0].Password === password) {
       setCanLogin(true);
       setId(data._array[0].ID);
     } else {
+      //should be displayed at somepoint
       console.log('Password Incorrect');
     }
   };
@@ -61,17 +64,17 @@ const SignInScreen = ({navigation}) => {
       setCanCreateAccount(true);
     }
   };
-  //not properly checking for accounts yet
   const handleCreateAccount = () => {
-    //readData(checkNewUser);
-    navigation.navigate('CreateAccount', {
-      userEmail: email,
-      userPass: password,
-    });
-    // if (canCreateAccount) {
-    // } else {
-    //   console.log('User Already Exist');
-    // }
+    readData(checkNewUser);
+    if (canCreateAccount) {
+      navigation.navigate('CreateAccount', {
+        userEmail: email,
+        userPass: password,
+      });
+    } else {
+      //should be displayed at some point
+      console.log('User Already Exist');
+    }
   };
   return (
     <LinearGradient

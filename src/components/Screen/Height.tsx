@@ -17,7 +17,8 @@ const Height = ({route, navigation}) => {
   const [ft, setFt] = useState('');
   const [inch, setIn] = useState('');
   const [date, setDate] = useState('');
-  const [displayHeight, setDHeight] = useState('');
+  const [displayHeightIn, setDHeightIn] = useState('');
+  const [displayHeightFt, setDHeightFt] = useState('');
 
   const readData = async () => {
     try {
@@ -26,7 +27,32 @@ const Height = ({route, navigation}) => {
         tx.executeSql(
           'SELECT * FROM Users WHERE ID=' + route.params.id,
           null,
-          (_, {rows}) => setDHeight(JSON.stringify(rows._array[0].Height)),
+          (_, {rows}) => setHeights(rows),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+  const setHeights = async data => {
+    setDHeightFt(JSON.stringify(data._array[0].HeightFt));
+    setDHeightIn(JSON.stringify(data._array[0].HeightIn));
+  };
+
+  const updateHeight = () => {
+    try {
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'UPDATE Users SET HeightFt=' +
+            ft +
+            ', HeightIn=' +
+            inch +
+            " Where ID= '" +
+            route.params.id +
+            "'",
+          null,
+          (_, {}) => navigation.push('Homepage', {id: route.params.id}),
         );
       });
     } catch (error) {
@@ -45,7 +71,7 @@ const Height = ({route, navigation}) => {
       <CustomInput
         value={ft}
         setValue={setFt}
-        placeholder={displayHeight} //should be what current weight is
+        placeholder={displayHeightFt} //should be what current weight is
         height={41}
         width={82}
         radius={15}
@@ -58,7 +84,7 @@ const Height = ({route, navigation}) => {
       <CustomInput
         value={inch}
         setValue={setIn}
-        placeholder={'10'} //should be what current weight is
+        placeholder={displayHeightIn} //should be what current weight is
         height={41}
         width={82}
         radius={15}
@@ -82,7 +108,7 @@ const Height = ({route, navigation}) => {
       />
       <CustomButton
         title={'Enter'}
-        onClick={() => console.log('im working')}
+        onClick={() => updateHeight()}
         color={'#FE0000'}
         radius={15}
         height={32}

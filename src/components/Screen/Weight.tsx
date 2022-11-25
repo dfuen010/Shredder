@@ -23,7 +23,7 @@ const Weight = ({route, navigation}) => {
       db.transaction(tx => {
         // sending 4 arguments in executeSql
         tx.executeSql(
-          'SELECT * FROM Users WHERE ID=' + route.params.id,
+          "SELECT * FROM Users WHERE ID= '" + route.params.id + "'",
           null,
           (_, {rows}) => setDWeight(JSON.stringify(rows._array[0].Weight)),
         );
@@ -37,6 +37,25 @@ const Weight = ({route, navigation}) => {
     readData();
   }, []);
 
+  const updateWeight = () => {
+    try {
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'UPDATE Users SET Weight=' +
+            weight +
+            " Where ID= '" +
+            route.params.id +
+            "'",
+          null,
+          (_, {}) => navigation.push('Homepage', {id: route.params.id}),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -45,7 +64,7 @@ const Weight = ({route, navigation}) => {
       <CustomInput
         value={weight}
         setValue={setWeight}
-        placeholder={displayWeight} //should be what current weight is
+        placeholder={displayWeight}
         height={41}
         width={82}
         radius={15}
@@ -58,7 +77,7 @@ const Weight = ({route, navigation}) => {
       <CustomInput
         value={date}
         setValue={setDate}
-        placeholder={'11/15/2022'} //should be what current weight is
+        placeholder={'11/15/2022'} //should be what current date is
         height={41}
         width={111}
         radius={15}
@@ -69,7 +88,7 @@ const Weight = ({route, navigation}) => {
       />
       <CustomButton
         title={'Enter'}
-        onClick={() => console.log('im working')}
+        onClick={() => updateWeight()}
         color={'#FE0000'}
         radius={15}
         height={32}
