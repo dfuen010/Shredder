@@ -29,10 +29,10 @@ const App = () => {
           options={{title: 'Create Account'}}
         />
         <Stack.Screen
-            name="Homepage"
-            component={Homepage}
-            options={{ title: 'Go to Homepage' }}
-          />
+          name="Homepage"
+          component={Homepage}
+          options={{title: 'Go to Homepage'}}
+        />
         <Stack.Screen
           name="AddHeight"
           component={Height}

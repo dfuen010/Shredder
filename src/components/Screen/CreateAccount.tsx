@@ -5,7 +5,6 @@ import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
 import * as SQLite from 'expo-sqlite';
-import homepage from './homepage';
 const db = SQLite.openDatabase('UsersDB');
 
 //code needs a lot of clean up here
@@ -29,10 +28,15 @@ const CreateAccount = ({route, navigation}) => {
           '(ID INTEGER PRIMARY KEY AUTOINCREMENT, ' +
           'Name TEXT, ' +
           'Email TEXT, ' +
-          'Password TEXT,' +
-          ' Weight INTEGER,' +
-          ' HeightFt INTEGER,' +
-          ' HeightIn INTEGER)',
+          'Password TEXT, ' +
+          'Weight INTEGER, ' +
+          'HeightFt INTEGER, ' +
+          'HeightIn INTEGER, ' +
+          'Exercises BLOB, ' +
+          'Meals BLOB, ' +
+          'WeightList BLOB, ' +
+          'HeightList BLOB, ' +
+          'BMIList BLOB)',
       );
     });
   };
@@ -54,8 +58,8 @@ const CreateAccount = ({route, navigation}) => {
     try {
       await db.transaction(async tx => {
         tx.executeSql(
-          'INSERT INTO USERS (Name, Email, Password, Weight, HeightFt, HeightIn) Values (?,?,?,?,?,?)',
-          [name, userEmail, userPass, weight, heightFt, heightIn],
+          'INSERT INTO USERS (Name, Email, Password, Weight, HeightFt, HeightIn, Exercises, Meals, WeightList, HeightList, BMIList) Values (?,?,?,?,?,?,?,?,?,?,?)',
+          [name, userEmail, userPass, weight, heightFt, heightIn, '', '', '', '', ''],
         );
       });
     } catch (error) {

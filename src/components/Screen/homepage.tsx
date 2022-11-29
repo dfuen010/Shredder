@@ -17,10 +17,10 @@ import {NavigationProp} from '@react-navigation/native';
 import {LinearGradient} from 'expo-linear-gradient';
 import ToggleSwitch from '../../shared/ToggleSwitch';
 import * as SQLite from 'expo-sqlite';
+import Height from './Height';
 const db = SQLite.openDatabase('UsersDB');
 
 const Homepage = ({route, navigation}) => {
-  const {id} = route.params.id;
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
   const [heightFt, setFt] = useState('');
@@ -58,35 +58,37 @@ const Homepage = ({route, navigation}) => {
         locations={[0, 0.8]}>
         <View style={styles.fixToText}>
           <Button
-            title="Profile"
+            title="Progress"
             onPress={() => Alert.alert('Displaying User Progress')}
           />
+          <Text>Profile</Text>
 
-          <Text>PROGRESS</Text>
-
-          <Button
-            title="Logout"
-            onPress={() => Alert.alert('User has log out')}
-          />
+          <Button title="Logout" onPress={() => navigation.push('Login')} />
         </View>
 
         <View style={styles.fixToText}>
           <View>
-            <CustomButton
+            <Button
               title={'Weight'}
-              onClick={() =>
-                navigation.navigate('AddWeight', {id: route.params.id})
+              onPress={() =>
+                navigation.push('AddWeight', {id: route.params.id})
               }
-              color={'black'}
-              radius={20}
-              height={30}
-              width={60}
-              textSize={15}
-              font={'Arial'}
-              fontColor={'#ffffff'}
-              margin={0}
-              paddingTop={5}
             />
+            {/*<CustomButton*/}
+            {/*  title={'Weight'}*/}
+            {/*  onClick={() =>*/}
+            {/*    navigation.navigate('AddWeight', {id: route.params.id})*/}
+            {/*  }*/}
+            {/*  color={'black'}*/}
+            {/*  radius={20}*/}
+            {/*  height={30}*/}
+            {/*  width={60}*/}
+            {/*  textSize={15}*/}
+            {/*  font={'Arial'}*/}
+            {/*  fontColor={'#ffffff'}*/}
+            {/*  margin={0}*/}
+            {/*  paddingTop={5}*/}
+            {/*/>*/}
             <Text>{weight} lbs</Text>
           </View>
 
@@ -96,21 +98,27 @@ const Homepage = ({route, navigation}) => {
           />
 
           <View>
-            <CustomButton
+            <Button
               title={'Height'}
-              onClick={() =>
-                navigation.navigate('AddHeight', {id: route.params.id})
+              onPress={() =>
+                navigation.push('AddHeight', {id: route.params.id})
               }
-              color={'black'}
-              radius={20}
-              height={30}
-              width={60}
-              textSize={15}
-              font={'Arial'}
-              fontColor={'#ffffff'}
-              margin={0}
-              paddingTop={5}
             />
+            {/*<CustomButton*/}
+            {/*  title={'Height'}*/}
+            {/*  onClick={() =>*/}
+            {/*    navigation.navigate('AddHeight', {id: route.params.id})*/}
+            {/*  }*/}
+            {/*  color={'black'}*/}
+            {/*  radius={20}*/}
+            {/*  height={30}*/}
+            {/*  width={60}*/}
+            {/*  textSize={15}*/}
+            {/*  font={'Arial'}*/}
+            {/*  fontColor={'#ffffff'}*/}
+            {/*  margin={0}*/}
+            {/*  paddingTop={5}*/}
+            {/*/>*/}
             <Text>
               {heightFt}'{heightIn}"
             </Text>
@@ -175,6 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
     width: '100%',
+    marginTop: 50,
   },
   textInputBox: {
     display: 'flex',

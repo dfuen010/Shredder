@@ -1,8 +1,10 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Slider from '../../shared/Options';
 import EditExercise from './EditExercise';
 import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
 import {EXCERCISES, CARDIO_DEFAULTS, STRENGTH_DEFAULTS} from './defaults';
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase('UsersDB');
 
 type ExerciseListProps = {
   type: string;
@@ -32,6 +34,24 @@ const ExerciseList = ({type}: ExerciseListProps) => {
 const Exercises = () => {
   const [exercise, setExercise] = useState('Cardio');
 
+  useEffect(() => {
+    createTable();
+  }, []);
+
+  const createTable = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS ' +
+          'Exercises ' +
+          '(ID INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+          'Name TEXT, ' +
+          'Sets INTEGER, ' +
+          'Repetitions INTEGER, ' +
+          'WeightPS INTEGER ,' +
+          'Time INTEGER)',
+      );
+    });
+  };
   return (
     <SafeAreaView>
       <View style={styles.container}>

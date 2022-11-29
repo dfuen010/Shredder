@@ -1,5 +1,8 @@
 import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
 import EditMeal from './EditMeal';
+import {useEffect} from 'react';
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase('UsersDB');
 
 const MealList = () => {
   const meals = ['Add Meal'];
@@ -18,6 +21,25 @@ const MealList = () => {
 };
 
 const Meals = () => {
+  useEffect(() => {
+    createTable();
+  }, []);
+
+  const createTable = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS ' +
+          'Meals ' +
+          '(ID INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+          'Name TEXT, ' +
+          'MealType TEXT, ' +
+          'Calories INTEGER, ' +
+          'Protein INTEGER ,' +
+          'Carbs INTEGER ,' +
+          'Fat INTEGER)',
+      );
+    });
+  };
   return (
     <SafeAreaView>
       <View style={styles.container}>
