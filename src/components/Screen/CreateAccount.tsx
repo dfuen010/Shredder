@@ -1,14 +1,65 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, ViewStyle, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
+import DisplayAnImage from '../../shared/DisplayAnImage';
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase('UsersDB');
 
-const CreateAccount = () => {
+//code needs a lot of clean up here
+const CreateAccount = ({route, navigation}) => {
+  const {userEmail, userPass} = route.params;
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
   const [heightFt, setFt] = useState('');
   const [heightIn, setIn] = useState('');
+
+  useEffect(() => {
+    createTable();
+  }, []);
+
+  const createTable = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS ' +
+          'Users ' +
+          '(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, ' +
+          'Email Text, ' +
+          'Password TEXT,' +
+          ' Weight INTEGER,' +
+          ' HeightFt INTEGER,' +
+          ' HeightIn INTEGER)',
+      );
+    });
+  };
+  //stores data in database
+  const handleCreateAccount = async () => {
+    try {
+      await db.transaction(async tx => {
+        tx.executeSql(
+          'INSERT INTO USERS (Name, Email, Password, Weight, HeightFt, HeightIn) Values (?,?,?,?,?,?)',
+          [name, userEmail, userPass, weight, heightFt, heightIn],
+        );
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //for testing purposes
+  // const readData = async () => {
+  //   try {
+  //     db.transaction(tx => {
+  //       // sending 4 arguments in executeSql
+  //       tx.executeSql('SELECT * FROM Users', null, (_, {rows}) =>
+  //         console.log(JSON.stringify(rows)),
+  //       );
+  //     });
+  //     console.log('yes');
+  //   } catch (error) {
+  //     console.log('error');
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -26,10 +77,12 @@ const CreateAccount = () => {
             setValue={setName}
             placeholder={'Name'}
             height={31}
-            width={75}
+            width={251}
             radius={0}
             margin={25}
             keyboardType={'default'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -41,6 +94,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -52,6 +107,8 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
 
           <CustomInput
@@ -63,10 +120,12 @@ const CreateAccount = () => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
+            color={'white'}
+            align={'center'}
           />
           <CustomButton
             title={'Create Account'}
-            onClick={() => console.log('im working')}
+            onClick={() => handleCreateAccount()}
             color={'#CB3F3F'}
             radius={20}
             height={47}
@@ -75,6 +134,7 @@ const CreateAccount = () => {
             font={'Roboto'}
             fontColor={'#ffffff'}
             margin={40}
+            paddingTop={12}
           />
         </View>
       </LinearGradient>
@@ -109,7 +169,7 @@ const styles = StyleSheet.create({
     width: 150,
     alignSelf: 'center',
     marginBottom: 40,
-    marginTop: 40
+    marginTop: 40,
   },
 });
 
