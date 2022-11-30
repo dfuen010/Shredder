@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ViewStyle,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import * as SQLite from 'expo-sqlite';
@@ -14,10 +7,22 @@ import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('UsersDB');
 
 const Height = ({route, navigation}) => {
+  const [weight, setWeight] = useState('');
   const [ft, setFt] = useState('');
   const [inch, setIn] = useState('');
   const [date, setDate] = useState('');
-  const [displayHeight, setDHeight] = useState('');
+  const [displayHeightIn, setDHeightIn] = useState('');
+  const [displayHeightFt, setDHeightFt] = useState('');
+  const [dateO, setDateO] = useState(new Date());
+  const [month, setMonth] = useState((dateO.getMonth() + 1).toString);
+  const [day, setDay] = useState(dateO.getDate().toString);
+  const [year, setYear] = useState(dateO.getFullYear().toString);
+  const [heightArr, setHeightArr] = useState('');
+  const [bmiArr, setBmiArr] = useState('');
+
+  useEffect(() => {
+    readData();
+  }, []);
 
   const readData = async () => {
     try {
@@ -26,7 +31,51 @@ const Height = ({route, navigation}) => {
         tx.executeSql(
           'SELECT * FROM Users WHERE ID=' + route.params.id,
           null,
-          (_, {rows}) => setDHeight(JSON.stringify(rows._array[0].Height)),
+          (_, {rows}) => saveData(rows._array[0]),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+  const saveData = data => {
+    setWeight(JSON.stringify(data.Weight));
+    setDHeightFt(JSON.stringify(data.HeightFt));
+    setDHeightIn(JSON.stringify(data.HeightIn));
+    setHeightArr(JSON.stringify(data.HeightList));
+    setBmiArr(JSON.stringify(data.BMIList));
+  };
+
+  const writeDate = () => {
+    setDateO(new Date(year + '-' + month + '-' + day));
+    setDate(dateO.toISOString());
+  };
+  const updateHeight = async () => {
+    try {
+      writeDate();
+      setHeightArr(heightArr + ', ' + ft + ' ' + inch + ' [' + date + ']');
+      setBmiArr(
+        bmiArr +
+          ', ' +
+          (parseInt(weight) / (parseInt(ft) * 12 + parseInt(inch))) * 703 +
+          ' [' +
+          date +
+          ']',
+      );
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'UPDATE Users SET HeightFt=' +
+            ft +
+            ', HeightIn=' +
+            inch +
+            ", HeightList= '" +
+            heightArr +
+            "' Where ID= '" +
+            route.params.id +
+            "'",
+          null,
+          (_, {}) => navigation.push('Homepage', {id: route.params.id}),
         );
       });
     } catch (error) {
@@ -34,9 +83,6 @@ const Height = ({route, navigation}) => {
     }
   };
 
-  useEffect(() => {
-    readData();
-  }, []);
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -45,7 +91,7 @@ const Height = ({route, navigation}) => {
       <CustomInput
         value={ft}
         setValue={setFt}
-        placeholder={displayHeight} //should be what current weight is
+        placeholder={displayHeightIn} //should be what current weight is
         height={41}
         width={82}
         radius={15}
@@ -127,7 +173,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 30,
-    fontFamily: 'Inter',
+    fontFamily: 'Arial',
     color: '#ffffff',
     fontWeight: '600',
     lineHeight: 36,

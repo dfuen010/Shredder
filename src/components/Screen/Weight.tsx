@@ -1,22 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ViewStyle,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import * as SQLite from 'expo-sqlite';
-
 const db = SQLite.openDatabase('UsersDB');
 
 const Weight = ({route, navigation}) => {
+  const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
-  const [date, setDate] = useState('');
   const [displayWeight, setDWeight] = useState('');
+  const [date, setDate] = useState('');
+  const [dateO, setDateO] = useState(new Date());
+  const [month, setMonth] = useState((dateO.getMonth() + 1).toString);
+  const [day, setDay] = useState(dateO.getDate().toString);
+  const [year, setYear] = useState(dateO.getFullYear().toString);
+  const [weightArr, setWeightArr] = useState('');
+  const [bmiArr, setBmiArr] = useState('');
+
+  useEffect(() => {
+    readData();
+  }, []);
 
   const readData = async () => {
     try {
@@ -25,17 +28,55 @@ const Weight = ({route, navigation}) => {
         tx.executeSql(
           'SELECT * FROM Users WHERE ID=' + route.params.id,
           null,
-          (_, {rows}) => setDWeight(JSON.stringify(rows._array[0].Weight)),
+          (_, {rows}) => saveData(rows._array[0]),
         );
       });
     } catch (error) {
       console.log('error');
     }
   };
-
-  useEffect(() => {
-    readData();
-  }, []);
+  const saveData = data => {
+    setDWeight(JSON.stringify(data.Weight));
+    setHeight(JSON.stringify(data.HeightFt * 12 + data.HeightIn));
+    setWeightArr(JSON.stringify(data.WeightList));
+    setBmiArr(JSON.stringify(data.BMIList));
+  };
+  const writeDate = () => {
+    setDateO(new Date(year + '-' + month + '-' + day));
+    setDate(dateO.toISOString());
+  };
+  const updateWeight = () => {
+    try {
+      writeDate();
+      setWeightArr(weightArr + ', ' + weight + ' [' + date + ']');
+      setBmiArr(
+        bmiArr +
+          ', ' +
+          1 + //(parseInt(weight) / parseInt(height)) * 703 +
+          ' [' +
+          date +
+          ']',
+      );
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'UPDATE Users SET Weight=' +
+            weight +
+            "WeightList= '" +
+            weightArr +
+            "BMIList= '" +
+            bmiArr +
+            "' Where ID= '" +
+            route.params.id +
+            "'",
+          null,
+          (_, {}) => navigation.push('Homepage', {id: route.params.id}),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -55,18 +96,62 @@ const Weight = ({route, navigation}) => {
         align={'flex-end'}
       />
       <Text style={styles.text}> Date:</Text>
-      <CustomInput
-        value={date}
-        setValue={setDate}
-        placeholder={'11/15/2022'} //should be what current weight is
-        height={41}
-        width={111}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
+      <View style={styles.row}>
+        <CustomInput
+          value={month}
+          setValue={setMonth}
+          placeholder={displayWeight}
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <CustomInput
+          value={day}
+          setValue={setDay}
+          placeholder={displayWeight}
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <CustomInput
+          value={year}
+          setValue={setYear}
+          placeholder={displayWeight}
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+      </View>
+      {/*<CustomInput*/}
+      {/*  value={date}*/}
+      {/*  setValue={setDate}*/}
+      {/*  placeholder={*/}
+      {/*    date.getDate() +*/}
+      {/*    '/' +*/}
+      {/*    (date.getMonth() + 1) +*/}
+      {/*    '/' +*/}
+      {/*    date.getFullYear()*/}
+      {/*  } //should be what current date is*/}
+      {/*  height={41}*/}
+      {/*  width={111}*/}
+      {/*  radius={15}*/}
+      {/*  margin={10}*/}
+      {/*  keyboardType={'numeric'}*/}
+      {/*  color={'#8F8F8F'}*/}
+      {/*  align={'flex-end'}*/}
+      {/*/>*/}
       <CustomButton
         title={'Enter'}
         onClick={() => console.log('im working')}
@@ -92,6 +177,12 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    paddingTop: 0,
+  },
   textInputBox: {
     display: 'flex',
     justifyContent: 'center',
@@ -114,7 +205,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 30,
-    fontFamily: 'Inter',
+    fontFamily: 'Arial',
     color: '#ffffff',
     fontWeight: '600',
     lineHeight: 36,
