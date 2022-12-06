@@ -5,7 +5,7 @@ import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
 import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
 //code needs a lot of clean up here
 const CreateAccount = ({route, navigation}) => {
@@ -47,7 +47,8 @@ const CreateAccount = ({route, navigation}) => {
         tx.executeSql(
           "SELECT * FROM Users WHERE Email LIKE '" + userEmail + "'",
           null,
-          (_, {rows}) => setId(rows._array[0].ID),
+          (_, {rows}) =>
+            navigation.push('Homepage', {id: rows._array[0].ID}),
         );
       });
     } catch (error) {
@@ -58,8 +59,20 @@ const CreateAccount = ({route, navigation}) => {
     try {
       await db.transaction(async tx => {
         tx.executeSql(
-          'INSERT INTO USERS (Name, Email, Password, Weight, HeightFt, HeightIn, Exercises, Meals, WeightList, HeightList, BMIList) Values (?,?,?,?,?,?,?,?,?,?,?)',
-          [name, userEmail, userPass, weight, heightFt, heightIn, '', '', '', '', ''],
+          'INSERT INTO Users (Name, Email, Password, Weight, HeightFt, HeightIn, Exercises, Meals, WeightList, HeightList, BMIList) Values (?,?,?,?,?,?,?,?,?,?,?)',
+          [
+            name,
+            userEmail,
+            userPass,
+            weight,
+            heightFt,
+            heightIn,
+            '',
+            '',
+            '',
+            '',
+            '',
+          ],
         );
       });
     } catch (error) {
@@ -68,11 +81,10 @@ const CreateAccount = ({route, navigation}) => {
   };
   //stores data in database
   const handleCreateAccount = async () => {
-    writeData();
-    readData();
+    await writeData();
+    await readData();
     //testing purposes only
     console.log(id);
-    navigation.navigate('Homepage', {id: id});
   };
   //for testing purposes
   // const readData = async () => {

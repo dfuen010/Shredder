@@ -6,12 +6,13 @@ import {
   ViewStyle,
   StyleSheet,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
 const Height = ({route, navigation}) => {
   const [ft, setFt] = useState('');
@@ -64,62 +65,64 @@ const Height = ({route, navigation}) => {
     readData();
   }, []);
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <Text style={styles.header}>Add Height</Text>
-      <Text style={styles.text}> Height(ft):</Text>
-      <CustomInput
-        value={ft}
-        setValue={setFt}
-        placeholder={displayHeightFt} //should be what current weight is
-        height={41}
-        width={82}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
-      <Text style={styles.text}> Height(in):</Text>
-      <CustomInput
-        value={inch}
-        setValue={setIn}
-        placeholder={displayHeightIn} //should be what current weight is
-        height={41}
-        width={82}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
-      <Text style={styles.text}> Date:</Text>
-      <CustomInput
-        value={date}
-        setValue={setDate}
-        placeholder={'11/15/2022'} //should be what current weight is
-        height={41}
-        width={111}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
-      <CustomButton
-        title={'Enter'}
-        onClick={() => updateHeight()}
-        color={'#FE0000'}
-        radius={15}
-        height={32}
-        width={98}
-        textSize={17}
-        font={'Inter'}
-        fontColor={'#ffffff'}
-        margin={40}
-        paddingTop={3} //12
-      />
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Text style={styles.header}>Add Height</Text>
+        <Text style={styles.text}> Height(ft):</Text>
+        <CustomInput
+          value={ft}
+          setValue={setFt}
+          placeholder={displayHeightFt} //should be what current weight is
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <Text style={styles.text}> Height(in):</Text>
+        <CustomInput
+          value={inch}
+          setValue={setIn}
+          placeholder={displayHeightIn} //should be what current weight is
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <Text style={styles.text}> Date:</Text>
+        <CustomInput
+          value={date}
+          setValue={setDate}
+          placeholder={'11/15/2022'} //should be what current weight is
+          height={41}
+          width={111}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <CustomButton
+          title={'Enter'}
+          onClick={() => updateHeight()}
+          color={'#FE0000'}
+          radius={15}
+          height={32}
+          width={98}
+          textSize={17}
+          font={'Arial'}
+          fontColor={'#ffffff'}
+          margin={40}
+          paddingTop={3} //12
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 30,
-    fontFamily: 'Inter',
+    fontFamily: 'Arial',
     color: '#ffffff',
     fontWeight: '600',
     lineHeight: 36,
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     alignSelf: 'baseline',
     fontSize: 20,
-    fontFamily: 'Inter',
+    fontFamily: 'Arial',
     fontWeight: '600',
     lineHeight: 24,
   },

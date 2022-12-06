@@ -1,18 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ViewStyle,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
 import {LinearGradient} from 'expo-linear-gradient';
 import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
 //code needs a lot of clean up here
 const SignInScreen = ({navigation}) => {
@@ -24,6 +17,18 @@ const SignInScreen = ({navigation}) => {
 
   useEffect(() => {}, []);
 
+  // const deleteData = () => {
+  //   try {
+  //     db.transaction(tx => {
+  //       // sending 4 arguments in executeSql
+  //       tx.executeSql('DELETE FROM Users', null, (_, {}) =>
+  //         console.log('Delete database'),
+  //       );
+  //     });
+  //   } catch (error) {
+  //     console.log('error');
+  //   }
+  // };
   const readData = async (func: Function) => {
     try {
       db.transaction(tx => {
@@ -32,6 +37,8 @@ const SignInScreen = ({navigation}) => {
           "SELECT * FROM Users WHERE Email LIKE '" + email + "'",
           null,
           (_, {rows}) => func(rows),
+          () =>
+            setCanCreateAccount(true)
         );
       });
     } catch (error) {
@@ -41,7 +48,7 @@ const SignInScreen = ({navigation}) => {
   const handleLogin = () => {
     readData(logVal);
     if (canLogin) {
-      navigation.navigate('Homepage', {id: id});
+      navigation.push('Homepage', {id: id});
     } else {
       //should be displayed at some point
       console.log('User does not exist');
@@ -60,20 +67,25 @@ const SignInScreen = ({navigation}) => {
     }
   };
   const checkNewUser = (data: SQLite.SQLResultSetRowList) => {
-    if (data.length === 0) {
+    console.log(data);
+    if(data.length === 0){
       setCanCreateAccount(true);
     }
+    else{
+      setCanCreateAccount(false);
+    }
+
   };
   const handleCreateAccount = () => {
     readData(checkNewUser);
-    if (canCreateAccount) {
-      navigation.navigate('CreateAccount', {
+    if (!canCreateAccount) {
+      //should be displayed at some point
+      console.log('User Already Exist');
+    } else {
+      navigation.push('CreateAccount', {
         userEmail: email,
         userPass: password,
       });
-    } else {
-      //should be displayed at some point
-      console.log('User Already Exist');
     }
   };
   return (

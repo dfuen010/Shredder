@@ -2,9 +2,9 @@ import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
 import EditMeal from './EditMeal';
 import {useEffect} from 'react';
 import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
-const MealList = () => {
+const MealList = ({route, navigation}) => {
   const meals = ['Add Meal'];
   return (
     <>
@@ -12,7 +12,7 @@ const MealList = () => {
         return (
           <>
             <View style={styles.lineBreak} />
-            <EditMeal isCreate={i === meals.length - 1} mealName={meal} />
+            <EditMeal route={route} navigation={navigation} />
           </>
         );
       })}
@@ -20,7 +20,7 @@ const MealList = () => {
   );
 };
 
-const Meals = () => {
+const Meals = ({route, navigation}) => {
   useEffect(() => {
     createTable();
   }, []);
@@ -44,7 +44,8 @@ const Meals = () => {
     <SafeAreaView>
       <View style={styles.container}>
         <Text style={styles.topText}>Add/Edit Meal</Text>
-        <MealList />
+        <MealList route={route} navigation={navigation} />
+
         <View style={styles.lineBreak} />
       </View>
     </SafeAreaView>
