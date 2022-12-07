@@ -2,11 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
-  ViewStyle,
   StyleSheet,
   StatusBar,
   SafeAreaView,
+  Button,
 } from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
@@ -14,12 +13,17 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('ShredderDB');
 
+// @ts-ignore
 const Height = ({route, navigation}) => {
   const [ft, setFt] = useState('');
   const [inch, setIn] = useState('');
   const [date, setDate] = useState('');
   const [displayHeightIn, setDHeightIn] = useState('');
   const [displayHeightFt, setDHeightFt] = useState('');
+  const [heightList, setHeightList] = useState('');
+  const today = new Date();
+  const tempDate =
+    today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear();
 
   const readData = async () => {
     try {
@@ -27,7 +31,7 @@ const Height = ({route, navigation}) => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           'SELECT * FROM Users WHERE ID=' + route.params.id,
-          null,
+          undefined,
           (_, {rows}) => setHeights(rows),
         );
       });
@@ -35,13 +39,39 @@ const Height = ({route, navigation}) => {
       console.log('error');
     }
   };
-  const setHeights = async data => {
+  const setHeights = async (data: SQLite.SQLResultSetRowList) => {
     setDHeightFt(JSON.stringify(data._array[0].HeightFt));
     setDHeightIn(JSON.stringify(data._array[0].HeightIn));
+    setHeightList(JSON.stringify(data._array[0].HeightList));
   };
 
   const updateHeight = () => {
     try {
+      let temp = '';
+      if (heightList === '""') {
+        temp = parseInt(ft, 10) * 12 + parseInt(inch, 10) + ' [' + date + ']';
+      } else {
+        temp =
+          heightList +
+          ', ' +
+          parseInt(ft, 10) * 12 +
+          parseInt(inch, 10) +
+          ' [' +
+          date +
+          ']';
+        temp = temp.replace(/"/g, '');
+      }
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          "UPDATE Users SET HeightList='" +
+            temp +
+            "' Where ID= '" +
+            route.params.id +
+            "'",
+          undefined,
+        );
+      });
       db.transaction(tx => {
         // sending 4 arguments in executeSql
         tx.executeSql(
@@ -52,7 +82,7 @@ const Height = ({route, navigation}) => {
             " Where ID= '" +
             route.params.id +
             "'",
-          null,
+          undefined,
           (_, {}) => navigation.push('Homepage', {id: route.params.id}),
         );
       });
@@ -63,11 +93,15 @@ const Height = ({route, navigation}) => {
 
   useEffect(() => {
     readData();
-  }, []);
+  });
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
+        <Button
+          title="Profile"
+          onPress={() => navigation.navigate('Homepage', {id: route.params.id})}
+        />
         <Text style={styles.header}>Add Height</Text>
         <Text style={styles.text}> Height(ft):</Text>
         <CustomInput
@@ -99,7 +133,7 @@ const Height = ({route, navigation}) => {
         <CustomInput
           value={date}
           setValue={setDate}
-          placeholder={'11/15/2022'} //should be what current weight is
+          placeholder={tempDate}
           height={41}
           width={111}
           radius={15}

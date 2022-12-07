@@ -2,11 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
-  ViewStyle,
   StyleSheet,
   StatusBar,
   SafeAreaView,
+  Button,
 } from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
@@ -14,10 +13,15 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('ShredderDB');
 
+// @ts-ignore
 const Weight = ({route, navigation}) => {
   const [weight, setWeight] = useState('');
   const [date, setDate] = useState('');
   const [displayWeight, setDWeight] = useState('');
+  const [weightList, setWeightList] = useState('');
+  const today = new Date();
+  const tempDate =
+    today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear();
 
   const readData = async () => {
     try {
@@ -25,8 +29,11 @@ const Weight = ({route, navigation}) => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           "SELECT * FROM Users WHERE ID= '" + route.params.id + "'",
-          null,
-          (_, {rows}) => setDWeight(JSON.stringify(rows._array[0].Weight)),
+          undefined,
+          (_, {rows}) => {
+            setDWeight(JSON.stringify(rows._array[0].Weight));
+            setWeightList(JSON.stringify(rows._array[0].WeightList));
+          },
         );
       });
     } catch (error) {
@@ -36,10 +43,28 @@ const Weight = ({route, navigation}) => {
 
   useEffect(() => {
     readData();
-  }, []);
+  });
 
   const updateWeight = () => {
     try {
+      let temp = '';
+      if (weightList === '""') {
+        temp = weight + ' [' + date + ']';
+      } else {
+        temp = weightList + ', ' + weight + ' [' + date + ']';
+        temp = temp.replace(/"/g, '');
+      }
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          "UPDATE Users SET WeightList='" +
+            temp +
+            "' Where ID= '" +
+            route.params.id +
+            "'",
+          undefined,
+        );
+      });
       db.transaction(tx => {
         // sending 4 arguments in executeSql
         tx.executeSql(
@@ -48,7 +73,7 @@ const Weight = ({route, navigation}) => {
             " Where ID= '" +
             route.params.id +
             "'",
-          null,
+          undefined,
           (_, {}) => navigation.push('Homepage', {id: route.params.id}),
         );
       });
@@ -60,6 +85,10 @@ const Weight = ({route, navigation}) => {
     <SafeAreaView>
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
+        <Button
+          title="Profile"
+          onPress={() => navigation.navigate('Homepage', {id: route.params.id})}
+        />
         <Text style={styles.header}>Add Weight</Text>
         <Text style={styles.text}> Weight(lbs):</Text>
         <CustomInput
@@ -78,7 +107,7 @@ const Weight = ({route, navigation}) => {
         <CustomInput
           value={date}
           setValue={setDate}
-          placeholder={'11/15/2022'} //should be what current date is
+          placeholder={tempDate} //should be what current date is
           height={41}
           width={111}
           radius={15}
@@ -112,6 +141,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
     height: '100%',
     width: '100%',
+  },
+  fixToText: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   textInputBox: {
     display: 'flex',

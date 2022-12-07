@@ -6,10 +6,11 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('ShredderDB');
 
+// @ts-ignore
 const EditMeal = ({route, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [meal, setMeal] = useState('');
@@ -22,7 +23,7 @@ const EditMeal = ({route, navigation}) => {
 
   useEffect(() => {
     readData();
-  }, []);
+  });
 
   const readData = async () => {
     try {
@@ -30,7 +31,7 @@ const EditMeal = ({route, navigation}) => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           "SELECT * FROM Users WHERE ID= '" + route.params.id + "'",
-          null,
+          undefined,
           (_, {rows}) => setMealList(JSON.stringify(rows._array[0].Meals)),
         );
       });
@@ -49,7 +50,7 @@ const EditMeal = ({route, navigation}) => {
     });
     console.log(route.params.id);
     let temp = '';
-    if (mealList == '""') {
+    if (mealList === '""') {
       temp = name;
     } else {
       temp = mealList + ', ' + name;
@@ -64,7 +65,7 @@ const EditMeal = ({route, navigation}) => {
           "' Where ID= '" +
           route.params.id +
           "'",
-        null,
+        undefined,
         (_, {}) => navigation.push('Homepage', {id: route.params.id}),
       );
       console.log('test');

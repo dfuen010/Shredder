@@ -5,7 +5,6 @@ import {
   Image,
   StyleSheet,
   Button,
-  Alert,
   useWindowDimensions,
 } from 'react-native';
 import CustomButton from '../../shared/CustomButton';
@@ -13,9 +12,10 @@ import {LinearGradient} from 'expo-linear-gradient';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import MealDisplay from '../Meal/MealDisplay';
 import * as SQLite from 'expo-sqlite';
-import ExerciseDisplay from "../Exercise/ExerciseDisplay";
+import ExerciseDisplay from '../Exercise/ExerciseDisplay';
 const db = SQLite.openDatabase('ShredderDB');
 
+// @ts-ignore
 const Homepage = ({route, navigation}) => {
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
@@ -23,20 +23,20 @@ const Homepage = ({route, navigation}) => {
   const [heightIn, setIn] = useState('');
   const [mealList, setMealList] = useState([]);
   const [exList, setExList] = useState([]);
-  const [totalCalories, setTotalCalories] = useState(0);
+  const [totalCalories, setTotalCalories] = useState([0]);
+  const [totalMin, setTotalMin] = useState([0]);
 
   useEffect(() => {
     readData();
-  }, []);
+  });
 
   const readData = async () => {
     try {
-      console.log('test');
       db.transaction(tx => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           "SELECT * FROM Users WHERE ID= '" + route.params.id + "'",
-          null,
+          undefined,
           (_, {rows}) => saveData(rows._array[0]),
         );
       });
@@ -44,8 +44,8 @@ const Homepage = ({route, navigation}) => {
       console.log('error');
     }
   };
-  const setList = lis => {
-    if (lis.length === 1 && lis[0] == '""') {
+  const setList = (lis: any[]) => {
+    if (lis.length === 1 && lis[0] === '""') {
       return;
     }
     lis.map(meal => {
@@ -54,15 +54,18 @@ const Homepage = ({route, navigation}) => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           "SELECT * FROM Meals WHERE Name LIKE '" + meal + "'",
-          null,
-          (_, {rows}) => mealList.push(rows._array[0]),
+          undefined,
+          (_, {rows}) => {
+            // @ts-ignore
+            mealList.push(rows._array[0]);
+            totalCalories.push(rows._array[0].Calories);
+          },
         );
       });
     });
   };
-  const setexList = lis => {
-    console.log('chek', lis);
-    if (lis.length === 1 && lis[0] == '""') {
+  const setexList = (lis: any[]) => {
+    if (lis.length === 1 && lis[0] === '""') {
       return;
     }
     lis.map(ex => {
@@ -71,13 +74,24 @@ const Homepage = ({route, navigation}) => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           "SELECT * FROM Exercises WHERE Name LIKE '" + ex + "'",
-          null,
-          (_, {rows}) => exList.push(rows._array[0]),
+          undefined,
+          (_, {rows}) => {
+            // @ts-ignore
+            exList.push(rows._array[0]);
+            totalMin.push(rows._array[0].Time);
+          },
         );
       });
     });
   };
-  const saveData = async data => {
+  const saveData = async (data: {
+    Name: React.SetStateAction<string>;
+    Weight: React.SetStateAction<string>;
+    HeightFt: React.SetStateAction<string>;
+    HeightIn: React.SetStateAction<string>;
+    Meals: any;
+    Exercises: any;
+  }) => {
     await setName(data.Name);
     await setWeight(data.Weight);
     await setFt(data.HeightFt);
@@ -86,6 +100,7 @@ const Homepage = ({route, navigation}) => {
     await setexList(JSON.stringify(data.Exercises).split(', '));
   };
   const FirstRoute = () => (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{flex: 1, backgroundColor: '#000000'}}>
       {mealList.map(meal => (
         <View key={meal}>
@@ -94,11 +109,17 @@ const Homepage = ({route, navigation}) => {
         </View>
       ))}
       <View style={styles.lineBreak} />
-      <Text style={styles.textTotal}>Total Calories:</Text>
+      <Text style={styles.textTotal}>
+        Total Calories:{' '}
+        {totalCalories.reduce((accumulator, value) => {
+          return accumulator + value;
+        }, 0)}
+      </Text>
     </View>
   );
 
   const SecondRoute = () => (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{flex: 1, backgroundColor: '#000000'}}>
       {exList.map(ex => (
         <View key={ex}>
@@ -107,7 +128,12 @@ const Homepage = ({route, navigation}) => {
         </View>
       ))}
       <View style={styles.lineBreak} />
-      <Text style={styles.textTotal}>Total Calories:</Text>
+      <Text style={styles.textTotal}>
+        Total Minutes:{' '}
+        {totalMin.reduce((accumulator, value) => {
+          return accumulator + value;
+        }, 0)}
+      </Text>
     </View>
   );
 
@@ -121,7 +147,6 @@ const Homepage = ({route, navigation}) => {
     {key: 'first', title: 'Meals'},
     {key: 'second', title: 'Exercises'},
   ]);
-  console.log(mealList);
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -131,7 +156,7 @@ const Homepage = ({route, navigation}) => {
         <View style={styles.fixToText}>
           <Button
             title="Progress"
-            onPress={() => Alert.alert('Displaying User Progress')}
+            onPress={() => navigation.push('Progress', {id: route.params.id})}
           />
           <Text style={styles.text}>Profile</Text>
 
@@ -169,7 +194,7 @@ const Homepage = ({route, navigation}) => {
 
         <View style={styles.fixToText}>
           <Text />
-          <Text style={{fontWeight: 'bold', color: '#ffffff'}}> {name} </Text>
+          <Text style={styles.name}> {name} </Text>
           <Text />
         </View>
         <View style={styles.fixToTextBut}>
@@ -181,7 +206,7 @@ const Homepage = ({route, navigation}) => {
             color={'black'}
             radius={20}
             height={30}
-            width={100}
+            width={120}
             textSize={15}
             font={'Arial'}
             fontColor={'#ffffff'}
@@ -189,14 +214,14 @@ const Homepage = ({route, navigation}) => {
             paddingTop={5}
           />
           <CustomButton
-            title={'Workouts'}
+            title={'Add Exercise'}
             onClick={() =>
               navigation.navigate('ViewExercise', {id: route.params.id})
             }
             color={'black'}
             radius={20}
             height={30}
-            width={100}
+            width={120}
             textSize={15}
             font={'Arial'}
             fontColor={'#ffffff'}
@@ -228,6 +253,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 18,
     color: '#ffffffff',
+  },
+  name: {
+    fontWeight: 'bold',
+    color: '#ffffff',
   },
   textInputBox: {
     display: 'flex',

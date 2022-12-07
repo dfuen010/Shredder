@@ -1,14 +1,15 @@
-import {SafeAreaView, View, Text, StyleSheet} from 'react-native';
+import {SafeAreaView, View, Text, StyleSheet, Button} from 'react-native';
 import EditMeal from './EditMeal';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('ShredderDB');
 
+// @ts-ignore
 const MealList = ({route, navigation}) => {
   const meals = ['Add Meal'];
   return (
     <>
-      {meals.map((meal, i) => {
+      {meals.map(() => {
         return (
           <>
             <View style={styles.lineBreak} />
@@ -20,6 +21,7 @@ const MealList = ({route, navigation}) => {
   );
 };
 
+// @ts-ignore
 const Meals = ({route, navigation}) => {
   useEffect(() => {
     createTable();
@@ -43,6 +45,10 @@ const Meals = ({route, navigation}) => {
   return (
     <SafeAreaView>
       <View style={styles.container}>
+        <Button
+          title="Profile"
+          onPress={() => navigation.navigate('Homepage', {id: route.params.id})}
+        />
         <Text style={styles.topText}>Add/Edit Meal</Text>
         <MealList route={route} navigation={navigation} />
 

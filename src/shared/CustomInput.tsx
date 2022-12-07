@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet, FlexAlignType} from 'react-native';
+import {View, TextInput, StyleSheet, FlexAlignType} from 'react-native';
 
 interface Props {
   value: string;

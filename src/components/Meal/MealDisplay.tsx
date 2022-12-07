@@ -1,13 +1,8 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('ShredderDB');
+import React from 'react';
 
+// @ts-ignore
 const MealDisplay = ({mealData}) => {
-  const [mName, setMName] = useState('test1');
-  const [mType, setType] = useState('test2');
-  const [mCal, setMCal] = useState('test3');
-  console.log(mealData);
   return (
     <View>
       <View style={styles.fixToText}>
@@ -33,10 +28,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#ffffffff',
   },
-    subtext: {
-        fontSize: 14,
-      color: '#ffffffff',
-    },
+  subtext: {
+    fontSize: 14,
+    color: '#ffffffff',
+  },
 });
 
 export default MealDisplay;

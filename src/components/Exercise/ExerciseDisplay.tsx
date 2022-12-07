@@ -1,10 +1,8 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('ShredderDB');
+import React from 'react';
 
+// @ts-ignore
 const ExerciseDisplay = ({exData}) => {
-  console.log(exData);
   return (
     <View>
       <View style={styles.fixToText}>
@@ -12,7 +10,9 @@ const ExerciseDisplay = ({exData}) => {
         <Text style={styles.text}>{exData.Time} Mins</Text>
       </View>
       <View>
-        <Text style={styles.subtext}>&emsp;{exData.Sets}x{exData.Repetitions}x{exData.WeightPS}</Text>
+        <Text style={styles.subtext}>
+          &emsp;{exData.Sets}x{exData.Repetitions}x{exData.WeightPS}
+        </Text>
       </View>
     </View>
   );
@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#ffffffff',
   },
-    subtext: {
-        fontSize: 14,
-      color: '#ffffffff',
-    },
+  subtext: {
+    fontSize: 14,
+    color: '#ffffffff',
+  },
 });
 
 export default ExerciseDisplay;

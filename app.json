@@ -1,4 +1,19 @@
 {
-  "name": "Shredder",
-  "displayName": "Shredder"
+  "expo": {
+    "name": "Shredded",
+    "slug": "shredded",
+    "icon": "./Shared/Images/My_project.png",
+    "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.sdd.Shredded"
+    },
+    "android": {
+      "package": "com.sdd.Shredded"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "436df57d-dab3-4c24-a6b7-8bf3c2f2f3a0"
+      }
+    }
+  }
 }
