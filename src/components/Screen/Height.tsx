@@ -2,22 +2,28 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
-  ViewStyle,
   StyleSheet,
   StatusBar,
+  SafeAreaView,
+  Button,
 } from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
+// @ts-ignore
 const Height = ({route, navigation}) => {
   const [ft, setFt] = useState('');
   const [inch, setIn] = useState('');
   const [date, setDate] = useState('');
-  const [displayHeight, setDHeight] = useState('');
+  const [displayHeightIn, setDHeightIn] = useState('');
+  const [displayHeightFt, setDHeightFt] = useState('');
+  const [heightList, setHeightList] = useState('');
+  const today = new Date();
+  const tempDate =
+    today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear();
 
   const readData = async () => {
     try {
@@ -25,8 +31,59 @@ const Height = ({route, navigation}) => {
         // sending 4 arguments in executeSql
         tx.executeSql(
           'SELECT * FROM Users WHERE ID=' + route.params.id,
-          null,
-          (_, {rows}) => setDHeight(JSON.stringify(rows._array[0].Height)),
+          undefined,
+          (_, {rows}) => setHeights(rows),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+  const setHeights = async (data: SQLite.SQLResultSetRowList) => {
+    setDHeightFt(JSON.stringify(data._array[0].HeightFt));
+    setDHeightIn(JSON.stringify(data._array[0].HeightIn));
+    setHeightList(JSON.stringify(data._array[0].HeightList));
+  };
+
+  const updateHeight = () => {
+    try {
+      let temp = '';
+      if (heightList === '""') {
+        temp = parseInt(ft, 10) * 12 + parseInt(inch, 10) + ' [' + date + ']';
+      } else {
+        temp =
+          heightList +
+          ', ' +
+          parseInt(ft, 10) * 12 +
+          parseInt(inch, 10) +
+          ' [' +
+          date +
+          ']';
+        temp = temp.replace(/"/g, '');
+      }
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          "UPDATE Users SET HeightList='" +
+            temp +
+            "' Where ID= '" +
+            route.params.id +
+            "'",
+          undefined,
+        );
+      });
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
+        tx.executeSql(
+          'UPDATE Users SET HeightFt=' +
+            ft +
+            ', HeightIn=' +
+            inch +
+            " Where ID= '" +
+            route.params.id +
+            "'",
+          undefined,
+          (_, {}) => navigation.push('Homepage', {id: route.params.id}),
         );
       });
     } catch (error) {
@@ -36,64 +93,70 @@ const Height = ({route, navigation}) => {
 
   useEffect(() => {
     readData();
-  }, []);
+  });
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <Text style={styles.header}>Add Height</Text>
-      <Text style={styles.text}> Height(ft):</Text>
-      <CustomInput
-        value={ft}
-        setValue={setFt}
-        placeholder={displayHeight} //should be what current weight is
-        height={41}
-        width={82}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
-      <Text style={styles.text}> Height(in):</Text>
-      <CustomInput
-        value={inch}
-        setValue={setIn}
-        placeholder={'10'} //should be what current weight is
-        height={41}
-        width={82}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
-      <Text style={styles.text}> Date:</Text>
-      <CustomInput
-        value={date}
-        setValue={setDate}
-        placeholder={'11/15/2022'} //should be what current weight is
-        height={41}
-        width={111}
-        radius={15}
-        margin={10}
-        keyboardType={'numeric'}
-        color={'#8F8F8F'}
-        align={'flex-end'}
-      />
-      <CustomButton
-        title={'Enter'}
-        onClick={() => console.log('im working')}
-        color={'#FE0000'}
-        radius={15}
-        height={32}
-        width={98}
-        textSize={17}
-        font={'Inter'}
-        fontColor={'#ffffff'}
-        margin={40}
-        paddingTop={3} //12
-      />
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Button
+          title="Profile"
+          onPress={() => navigation.navigate('Homepage', {id: route.params.id})}
+        />
+        <Text style={styles.header}>Add Height</Text>
+        <Text style={styles.text}> Height(ft):</Text>
+        <CustomInput
+          value={ft}
+          setValue={setFt}
+          placeholder={displayHeightFt} //should be what current weight is
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <Text style={styles.text}> Height(in):</Text>
+        <CustomInput
+          value={inch}
+          setValue={setIn}
+          placeholder={displayHeightIn} //should be what current weight is
+          height={41}
+          width={82}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <Text style={styles.text}> Date:</Text>
+        <CustomInput
+          value={date}
+          setValue={setDate}
+          placeholder={tempDate}
+          height={41}
+          width={111}
+          radius={15}
+          margin={10}
+          keyboardType={'numeric'}
+          color={'#8F8F8F'}
+          align={'flex-end'}
+        />
+        <CustomButton
+          title={'Enter'}
+          onClick={() => updateHeight()}
+          color={'#FE0000'}
+          radius={15}
+          height={32}
+          width={98}
+          textSize={17}
+          font={'Arial'}
+          fontColor={'#ffffff'}
+          margin={40}
+          paddingTop={3} //12
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -127,7 +190,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 30,
-    fontFamily: 'Inter',
+    fontFamily: 'Arial',
     color: '#ffffff',
     fontWeight: '600',
     lineHeight: 36,
@@ -137,7 +200,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     alignSelf: 'baseline',
     fontSize: 20,
-    fontFamily: 'Inter',
+    fontFamily: 'Arial',
     fontWeight: '600',
     lineHeight: 24,
   },

@@ -1,4 +1,4 @@
-import React, {type PropsWithChildren} from 'react';
+import React from 'react';
 import CreateAccount from './src/components/Screen/CreateAccount';
 import SignInScreen from './src/components/Screen/SignInScreen';
 import Weight from './src/components/Screen/Weight';
@@ -8,6 +8,7 @@ import Meals from './src/components/Meal/Meals';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Homepage from './src/components/Screen/homepage';
+import Progress from './src/components/Screen/Progress';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,10 +30,10 @@ const App = () => {
           options={{title: 'Create Account'}}
         />
         <Stack.Screen
-            name="Homepage"
-            component={Homepage}
-            options={{ title: 'Go to Homepage' }}
-          />
+          name="Homepage"
+          component={Homepage}
+          options={{title: 'Go to Homepage'}}
+        />
         <Stack.Screen
           name="AddHeight"
           component={Height}
@@ -52,6 +53,11 @@ const App = () => {
           name="ViewMeals"
           component={Meals}
           options={{title: 'View Meals'}}
+        />
+        <Stack.Screen
+          name="Progress"
+          component={Progress}
+          options={{title: 'Progress'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,19 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, ViewStyle, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
-import DisplayAnImage from '../../shared/DisplayAnImage';
 import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
-//code needs a lot of clean up here
+// @ts-ignore
 const CreateAccount = ({route, navigation}) => {
   const {userEmail, userPass} = route.params;
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
   const [heightFt, setFt] = useState('');
   const [heightIn, setIn] = useState('');
+  const today = new Date();
+  const tempDate =
+    today.getMonth() + 1 + '/' + today.getDate() + '/' + today.getFullYear();
 
   useEffect(() => {
     createTable();
@@ -24,43 +26,68 @@ const CreateAccount = ({route, navigation}) => {
       tx.executeSql(
         'CREATE TABLE IF NOT EXISTS ' +
           'Users ' +
-          '(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, ' +
-          'Email Text, ' +
-          'Password TEXT,' +
-          ' Weight INTEGER,' +
-          ' HeightFt INTEGER,' +
-          ' HeightIn INTEGER)',
+          '(ID INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+          'Name TEXT, ' +
+          'Email TEXT, ' +
+          'Password TEXT, ' +
+          'Weight INTEGER, ' +
+          'HeightFt INTEGER, ' +
+          'HeightIn INTEGER, ' +
+          'Exercises BLOB, ' +
+          'Meals BLOB, ' +
+          'WeightList BLOB, ' +
+          'HeightList BLOB, ' +
+          'BMIList BLOB)',
       );
     });
   };
-  //stores data in database
-  const handleCreateAccount = async () => {
+  const readData = async () => {
     try {
-      await db.transaction(async tx => {
+      db.transaction(tx => {
+        // sending 4 arguments in executeSql
         tx.executeSql(
-          'INSERT INTO USERS (Name, Email, Password, Weight, HeightFt, HeightIn) Values (?,?,?,?,?,?)',
-          [name, userEmail, userPass, weight, heightFt, heightIn],
+          "SELECT * FROM Users WHERE Email LIKE '" + userEmail + "'",
+          undefined,
+          (_, {rows}) => navigation.push('Homepage', {id: rows._array[0].ID}),
+        );
+      });
+    } catch (error) {
+      console.log('error');
+    }
+  };
+  const writeData = async () => {
+    try {
+      db.transaction(async tx => {
+        tx.executeSql(
+          'INSERT INTO Users (Name, Email, Password, Weight, HeightFt, HeightIn, Exercises, Meals, WeightList, HeightList, BMIList) Values (?,?,?,?,?,?,?,?,?,?,?)',
+          [
+            name,
+            userEmail,
+            userPass,
+            weight,
+            heightFt,
+            heightIn,
+            '',
+            '',
+            weight + ' [' + tempDate + ']',
+            parseInt(heightFt, 10) * 12 +
+              parseInt(heightIn, 10) +
+              ' [' +
+              tempDate +
+              ']',
+            '',
+          ],
         );
       });
     } catch (error) {
       console.log(error);
     }
   };
-  //for testing purposes
-  // const readData = async () => {
-  //   try {
-  //     db.transaction(tx => {
-  //       // sending 4 arguments in executeSql
-  //       tx.executeSql('SELECT * FROM Users', null, (_, {rows}) =>
-  //         console.log(JSON.stringify(rows)),
-  //       );
-  //     });
-  //     console.log('yes');
-  //   } catch (error) {
-  //     console.log('error');
-  //   }
-  // };
-
+  //stores data in database
+  const handleCreateAccount = async () => {
+    await writeData();
+    await readData();
+  };
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -81,7 +108,7 @@ const CreateAccount = ({route, navigation}) => {
             radius={0}
             margin={25}
             keyboardType={'default'}
-            color={'white'}
+            color={'black'}
             align={'center'}
           />
 
@@ -94,7 +121,7 @@ const CreateAccount = ({route, navigation}) => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
-            color={'white'}
+            color={'black'}
             align={'center'}
           />
 
@@ -107,7 +134,7 @@ const CreateAccount = ({route, navigation}) => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
-            color={'white'}
+            color={'black'}
             align={'center'}
           />
 
@@ -120,7 +147,7 @@ const CreateAccount = ({route, navigation}) => {
             radius={0}
             margin={25}
             keyboardType={'number-pad'}
-            color={'white'}
+            color={'black'}
             align={'center'}
           />
           <CustomButton
@@ -131,7 +158,7 @@ const CreateAccount = ({route, navigation}) => {
             height={47}
             width={133}
             textSize={15}
-            font={'Roboto'}
+            font={'Arial'}
             fontColor={'#ffffff'}
             margin={40}
             paddingTop={12}

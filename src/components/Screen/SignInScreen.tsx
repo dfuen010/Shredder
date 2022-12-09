@@ -1,38 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ViewStyle,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import CustomInput from '../../shared/CustomInput';
 import CustomButton from '../../shared/CustomButton';
 import DisplayAnImage from '../../shared/DisplayAnImage';
 import {LinearGradient} from 'expo-linear-gradient';
 import * as SQLite from 'expo-sqlite';
-const db = SQLite.openDatabase('UsersDB');
+const db = SQLite.openDatabase('ShredderDB');
 
-//code needs a lot of clean up here
+// @ts-ignore
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [dbData, setData] = useState({});
-  const [canLogin, setCanLogin] = useState(false);
-  const [canCreateAccount, setCanCreateAccount] = useState(false);
-  const [id, setId] = useState('');
-
-  useEffect(() => {}, []);
-
   const readData = async (func: Function) => {
     try {
       db.transaction(tx => {
         // sending 4 arguments in executeSql
         tx.executeSql(
-          'SELECT * FROM Users WHERE Email=' + email,
-          null,
+          "SELECT * FROM Users WHERE Email LIKE '" + email + "'",
+          undefined,
           (_, {rows}) => func(rows),
+          () => {
+            return navigation.push('CreateAccount', {
+              userEmail: email,
+              userPass: password,
+            });
+          },
         );
       });
     } catch (error) {
@@ -41,37 +33,29 @@ const SignInScreen = ({navigation}) => {
   };
   const handleLogin = () => {
     readData(logVal);
-    if (canLogin) {
-      navigation.navigate('Homepage', {id: id})
-    } else {
-      console.log('User does not exist');
-    }
+    console.log('User does not exist');
   };
 
   const logVal = (data: SQLite.SQLResultSetRowList) => {
     if (data._array[0].Password === password) {
-      setCanLogin(true);
-      setId(data._array[0].ID);
+      navigation.push('Homepage', {id: data._array[0].ID});
     } else {
+      //should be displayed at somepoint
       console.log('Password Incorrect');
     }
   };
   const checkNewUser = (data: SQLite.SQLResultSetRowList) => {
     if (data.length === 0) {
-      setCanCreateAccount(true);
+      navigation.push('CreateAccount', {
+        userEmail: email,
+        userPass: password,
+      });
+    } else {
+      console.log('User Already Exist');
     }
   };
-  //not properly checking for accounts yet
   const handleCreateAccount = () => {
-    //readData(checkNewUser);
-    navigation.navigate('CreateAccount', {
-      userEmail: email,
-      userPass: password,
-    });
-    // if (canCreateAccount) {
-    // } else {
-    //   console.log('User Already Exist');
-    // }
+    readData(checkNewUser);
   };
   return (
     <LinearGradient
@@ -107,6 +91,7 @@ const SignInScreen = ({navigation}) => {
           align={'center'}
         />
       </View>
+      {/* eslint-disable-next-line react-native/no-inline-styles */}
       <View style={{flexDirection: 'row'}}>
         <CustomButton
           title={'Login'}
